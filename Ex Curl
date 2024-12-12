@@ -1,0 +1,7 @@
+curl -v -X POST "http://127.0.0.1:5000/upload_image" -H "Content-Type: application/json" -d "{\"image_base64\":\"$(base64 -w 0 images.png)\"}"
+
+curl -X GET http://127.0.0.1:5000/plato_list
+
+curl -X POST http://127.0.0.1:5000/add_plato -H "Content-Type: application/json" -d "{\"name\":\"mmd\", \"plato\":\"12B365\", \"IR\":\"11\"}"
+
+curl -X POST http://127.0.0.1:5000/remove_plato -H "Content-Type: application/json" -d "{\"id\":\"198d9747-4a29-45fa-94d8-1f0ac22438cb\"}"
