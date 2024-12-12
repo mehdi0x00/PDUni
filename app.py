@@ -142,6 +142,23 @@ def remove():
     else:
         return jsonify({'status': 'not found'}), 400
 
+@app.route('/edit_plato', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def edit():
+    data = request.get_json()
+    if not all(key in data for key in ('id', 'plato', 'IR', 'name')):
+        return jsonify({'error': 'Request must contain plato and IR and name'}), 400
+
+    id = data["id"]
+    plato = data['plato']
+    plato = character_parser(Pr=plato, En=None)
+    
+    IR = data['IR']
+    name = data['name']
+
+    db.update({'name': name, 'plato': plato, "IR": IR}, Query().id == id)
+    return jsonify({'status': 'success'}), 200
+
 
 @app.route('/plato_list', methods=['GET'])
 @cross_origin(supports_credentials=True)
