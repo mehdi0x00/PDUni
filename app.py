@@ -62,6 +62,22 @@ def read_plate(img):
         # در صورت بروز خطا، پیغام خطا برمی‌گرداند
         return f"error => {str(e)}"
 
+def character_parser(En,Pr):
+    Chars = [{"ب":"B"},{"پ":"P"},{"ت":"T"},{"ث":"SS"},{"ج":"J"},{"د":"D"},{"ز":"Z"},{"س":"S"},{"ش":"SH"},{"ص":"SSS"},{"ط":"T"},{"ع":"EIN"},{"ف":"F"},{"ق":"GH"},{"ک":"K"},{"گ":"G"},{"ل":"L"},{"م":"M"},{"ن":"N"},{"و":"V"},{"ه":"H"},{"ی":"Y"}]
+    if En:
+        for dic in Chars:
+            for key in dic:
+                print(key)
+                En = En.replace(dic[key],key)
+        return En
+     
+    elif Pr:
+        for dic in Chars:
+            for key in dic:
+                Pr = Pr.replace(key,dic[key])
+        return Pr
+
+
 # Directory to save uploaded images
 UPLOAD_FOLDER = 'uploaded_images'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -100,6 +116,8 @@ def add():
         return jsonify({'error': 'Request must contain plato and IR and name'}), 400
 
     plato = data['plato']
+    plato = character_parser(Pr=plato, En=None)
+    
     IR = data['IR']
     name = data['name']
 
@@ -128,7 +146,13 @@ def remove():
 @app.route('/plato_list', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def process_param():
-    return jsonify(db.all()), 200
+    all = db.all()
+    print(character_parser(En="AAA",Pr=None))
+    for i in range(len(all)): 
+        print(type(all[i]["plato"]))
+        all[i]["plato"] = character_parser(Pr=None,En=all[i]["plato"])
+
+    return jsonify(all), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
