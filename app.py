@@ -3,10 +3,13 @@ from ultralytics import YOLO
 from tinydb import TinyDB, Query
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 import base64,uuid
 import os
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
+
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 db = TinyDB('db.json')
 
@@ -65,6 +68,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # First endpoint: Receives a base64 image
 @app.route('/upload_image', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def upload_image():
     data = request.get_json()
     if 'image_base64' not in data:
@@ -89,6 +93,7 @@ def upload_image():
         return jsonify({'error': f'Failed to process image: {str(e)}'}), 500
 
 @app.route('/add_plato', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def add():
     data = request.get_json()
     if not all(key in data for key in ('plato', 'IR', 'name')):
@@ -104,6 +109,7 @@ def add():
     return jsonify({'status': 'success'}), 200
 
 @app.route('/remove_plato', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def remove():
     data = request.get_json()
     print(data["id"])
@@ -120,6 +126,7 @@ def remove():
 
 
 @app.route('/plato_list', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def process_param():
     return jsonify(db.all()), 200
 

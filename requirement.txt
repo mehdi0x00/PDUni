@@ -4,3 +4,4 @@ ultralytics
 ultralytics-thop
 tinydb
 flask
+flask_cors
